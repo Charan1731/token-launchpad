@@ -7,7 +7,7 @@ describe("Factory",  () => {
 
     const deployFactoryFixture = async () => {
 
-        const [deployer, creator] = await ethers.getSigners();
+        const [deployer,buyer, creator] = await ethers.getSigners();
 
         const Factory = await ethers.getContractFactory("Factory");
 
@@ -50,5 +50,51 @@ describe("Factory",  () => {
 
             expect(owner).to.equal( await factory.getAddress());
         })
+
+        it("should set the creator", async () => {
+            const {token, creator} = await deployFactoryFixture();
+
+            const creatorAddress = await token.creator();
+
+            expect(creatorAddress).to.equal(creator.address);
+        })
+
+        it("should set the supply", async () => {
+            const {token} = await deployFactoryFixture();
+
+            const supply = await token.totalSupply();
+
+            expect(supply).to.equal(ethers.parseUnits("1000000", 18));
+        })
+
+        it("should update the ETH balance", async () => {
+            const {factory} = await deployFactoryFixture();
+
+            const balance = await ethers.provider.getBalance(factory.getAddress());
+
+            expect(balance).to.equal(FEE);
+        })
+
+        it("should create a token sale", async () => {
+            const {factory, token, creator} = await deployFactoryFixture();
+
+            const count = await factory.tokenCount();
+
+            expect(count).to.equal(1);
+            const sale = await factory.getTokenSale(0);
+            console.log(sale);
+
+            expect(sale.token).to.equal(await token.getAddress());
+            expect(sale.name).to.equal("COINflop");
+            expect(sale.creator).to.equal(creator.address);
+            expect(sale.sold).to.equal(0);
+            expect(sale.raised).to.equal(0);
+            expect(sale.isOpen).to.equal(true);
+
+        })
+    })
+
+    describe("Buy", () => {
+        it("should buy a ")
     })
 })
