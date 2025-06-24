@@ -5,7 +5,6 @@ const { ethers } = require("hardhat")
 describe("Factory",  () => {
     const FEE = ethers.parseUnits("0.01",18)
 
-    //deploying the contract by creating an abstract contract
     const deployFactoryFixture = async () => {
 
         const [deployer, creator] = await ethers.getSigners();
