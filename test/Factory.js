@@ -2,7 +2,6 @@ const { loadFixture } = require("@nomicfoundation/hardhat-toolbox/network-helper
 const { expect } = require("chai")
 const { ethers } = require("hardhat")
 
-<<<<<<< HEAD
 describe("Factory",  () => {
     const FEE = ethers.parseUnits("0.01",18)
 //comments
@@ -98,8 +97,4 @@ describe("Factory",  () => {
     describe("Buy", () => {
         it("should buy a ")
     })
-=======
-describe("Factory", function () {
-
->>>>>>> cc32aeb5c3d3a05d491fd9aeb65f2f19d58bfc9c
 })

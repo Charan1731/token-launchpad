@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.27;
 
-<<<<<<< HEAD
 import {Token} from "./Token.sol";
 
 contract Factory {
@@ -66,6 +65,3 @@ contract Factory {
     }
 
 }
-=======
-contract Factory {}
->>>>>>> cc32aeb5c3d3a05d491fd9aeb65f2f19d58bfc9c
