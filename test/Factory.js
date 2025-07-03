@@ -24,6 +24,18 @@ describe("Factory",  () => {
         return { factory, deployer, creator, token: Token }
     }
 
+    const butTokenFixture = async () => {
+        const {factory, token, creator, buyer} = await deployFactoryFixture();
+
+        const AMOUNT = ethers.parseUnits("10000", 18);
+        const COST = ethers.parseUnits("1",18);
+
+        const transaction = await token.connect(buyer).buy(await token.getAddress() ,AMOUNT, {value: COST});
+        await transaction.wait();
+
+        return {factory, token, creator, buyer}
+    }
+
     describe("Deployment", () => {
         it("should set the fee", async () => {
             const { factory} = await deployFactoryFixture();
@@ -94,7 +106,18 @@ describe("Factory",  () => {
         })
     })
 
-    describe("Buy", () => {
-        it("should buy a ")
+    describe("Buying", () => {
+
+        const AMOUNT = ethers.parseUnits("10000", 18);
+        const COST = ethers.parseUnits("1",18);
+
+
+        it("should update the ETH balance", async () => {
+            const {factory} = await butTokenFixture();
+
+            const balance = await ethers.provider.getBalance(await factory.getAddress());
+
+            expect(balance).to.equal(FEE+COST);
+        })
     })
 })
