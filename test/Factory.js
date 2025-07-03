@@ -21,7 +21,7 @@ describe("Factory",  () => {
 
         const Token = await ethers.getContractAt("Token", tokenAddress);
 
-        return { factory, deployer, creator, token: Token }
+        return { factory, deployer, buyer, creator, token: Token }
     }
 
     const butTokenFixture = async () => {
@@ -30,7 +30,7 @@ describe("Factory",  () => {
         const AMOUNT = ethers.parseUnits("10000", 18);
         const COST = ethers.parseUnits("1",18);
 
-        const transaction = await token.connect(buyer).buy(await token.getAddress() ,AMOUNT, {value: COST});
+        const transaction = await factory.connect(buyer).buy(await token.getAddress() ,AMOUNT, {value: COST});
         await transaction.wait();
 
         return {factory, token, creator, buyer}
