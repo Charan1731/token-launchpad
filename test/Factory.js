@@ -24,7 +24,7 @@ describe("Factory",  () => {
         return { factory, deployer, buyer, creator, token: Token }
     }
 
-    const butTokenFixture = async () => {
+    const buyTokenFixture = async () => {
         const {factory, token, creator, buyer} = await deployFactoryFixture();
 
         const AMOUNT = ethers.parseUnits("10000", 18);
@@ -94,7 +94,6 @@ describe("Factory",  () => {
 
             expect(count).to.equal(1);
             const sale = await factory.getTokenSale(0);
-            console.log(sale);
 
             expect(sale.token).to.equal(await token.getAddress());
             expect(sale.name).to.equal("COINflop");
@@ -113,11 +112,19 @@ describe("Factory",  () => {
 
 
         it("should update the ETH balance", async () => {
-            const {factory} = await butTokenFixture();
+            const {factory} = await buyTokenFixture();
 
             const balance = await ethers.provider.getBalance(await factory.getAddress());
 
             expect(balance).to.equal(FEE+COST);
+        })
+
+        it("should update the token balance", async () => {
+            const {token, buyer} = await buyTokenFixture();
+
+            const balance = await token.balanceOf(buyer.address);
+
+            expect(balance).to.equal(AMOUNT);
         })
     })
 })
