@@ -22,6 +22,7 @@ contract Factory {
     }
 
     event Created(address indexed token);
+    event Buy(address indexed token, uint256 amount);
 
     //token address => token sale
     mapping(address => TokenSale) public tokenToSale;
@@ -60,7 +61,18 @@ contract Factory {
 
     function buy(address _token, uint256 _amount) external payable {
 
+        TokenSale storage sale = tokenToSale[_token];
+        //check conditions
+
+        //update the token sale
+        sale.sold += _amount;
+
+        //make sure fund trasing goal isn't met
+        
+
         Token(_token).transfer(msg.sender, _amount);
+
+        emit Buy(_token, _amount);
 
     }
 
