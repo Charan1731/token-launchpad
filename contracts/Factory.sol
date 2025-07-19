@@ -63,7 +63,6 @@ contract Factory {
         //tell people it is live
 
         emit Created(address(token));
-
     }
 
     function getCost(uint256 _sold) public pure returns(uint256){
@@ -90,8 +89,6 @@ contract Factory {
 
         require(msg.value >= totalCost, "Not enough ETH");
 
-
-
         //update the token sale
         sale.sold += _amount;
         sale.raised += totalCost;
@@ -101,8 +98,6 @@ contract Factory {
         if(sale.sold >= TOKEN_LIMIT || sale.raised>=TARGET){
             sale.isOpen = false;
         }
-
-        
 
         Token(_token).transfer(msg.sender, _amount);
 
@@ -115,17 +110,15 @@ contract Factory {
         TokenSale memory sale = tokenToSale[_token];
 
         require(sale.isOpen == false, "Sale is still open");
-
         uint256 amount = token.balanceOf(address(this));
-        token.transfer(sale.creator, amount);
 
+        token.transfer(sale.creator, amount);
         (bool success, ) = payable(sale.creator).call{value: sale.raised}("");
         require(success, "Transfer failed");
     }
 
     function withdraw(uint256 _amount) external {
         require(msg.sender == owner, "Not owner");
-
         (bool success, ) = payable(owner).call{value: _amount}("");
         require(success, "Transfer failed");
     }
