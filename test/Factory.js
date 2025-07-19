@@ -133,6 +133,55 @@ describe("Factory",  () => {
             const sale = await factory.tokenToSale(await token.getAddress());
 
             expect(sale.sold).to.equal(AMOUNT);
+            expect(sale.raised).to.equal(COST);
+            expect(sale.isOpen).to.equal(true);
+        })
+
+        it("should increase the base cost", async () => {
+            const {factory, token} = await buyTokenFixture();
+
+            const sale = await factory.tokenToSale(await token.getAddress());
+
+            const cost = await factory.getCost(sale.sold);
+
+            expect(cost).to.be.equal(ethers.parseUnits("0.0002"));
+        })
+    })
+
+    describe("Depositing", () => {
+
+        const AMOUNT = ethers.parseUnits("10000", 18);
+        const COST = ethers.parseUnits("2",18);
+
+        it("Sale should be closed and successfully desposits", async () => {
+
+            const {factory, token, creator, buyer} = await buyTokenFixture();
+
+            const buy = await factory.connect(buyer).buy(await token.getAddress(), AMOUNT, {value: COST});
+            await buy.wait();
+
+            const sale = await factory.tokenToSale(await token.getAddress());
+            expect(sale.isOpen).to.equal(false);
+
+            const deposit = await factory.connect(creator).deposit(await token.getAddress());
+            await deposit.wait();
+
+            const balance = await token.balanceOf(creator.address);
+            expect(balance).to.equal(ethers.parseUnits("980000",18));
+
+        })
+    })
+
+    describe("Withdrawing Fees", function () {
+        it("Should update ETH balances", async function () {
+          const { factory, deployer } = await deployFactoryFixture()
+    
+          const transaction = await factory.connect(deployer).withdraw(FEE)
+          await transaction.wait();
+    
+          const balance = await ethers.provider.getBalance(await factory.getAddress())
+    
+          expect(balance).to.equal(0)
         })
     })
 })
